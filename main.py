@@ -1,8 +1,12 @@
+#! /bin/env python3
+
 import argparse
 
 parser = argparse.ArgumentParser(prog="CodeForcesParses")
 parser.add_argument("--contest-number", required=False, type=int)
 parser.add_argument("--problem", required=False)
+
+args = parser.parse_args()
 
 import os
 import subprocess
@@ -49,11 +53,11 @@ def run_problem(problem):
             log.success(f"{problem}.{n} success")
         else:
             log.error(f"{problem}.{n} failed")
+
+
 if __name__ == "__main__":
-    args = parser.parse_args()
     if args.problem:
         run_problem(args.problem)
     elif args.contest_number:
         create_contest_files(args.contest_number)
 
- 
