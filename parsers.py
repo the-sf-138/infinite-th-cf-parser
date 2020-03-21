@@ -1,6 +1,7 @@
 import requests
 from html.parser import HTMLParser
 
+# For each problem to find all the test cases
 class CodeForcerProblemPageParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
@@ -28,8 +29,7 @@ class CodeForcerProblemPageParser(HTMLParser):
             self.temp = data.strip("\n").strip(" ") + "\n"
 
     def handle_endtag(self, tag):
-        # will fuck up on a nested table
-        # shoud do a stack obv
+        # the end tag of the stack tells us what data it is
         if self.div_stack and tag == "div":
             data_type = self.div_stack.pop()
             if data_type == "input":
@@ -42,14 +42,17 @@ class CodeForcerProblemPageParser(HTMLParser):
             self.awaiting = False
 
     def get_test_cases(self, contest, problem):
-        url = f"https://codeforces.com/contest/{contest}/problem/{problem.upper()}"
-        r = requests.get(url)
-        self.feed(r.text)
-        result = list(zip(self.inputs, self.outputs))
-        self.inputs = []
-        self.outputs = []
-        return result
+        url     = f"https://codeforces.com/contest/{contest}/problem/{problem.upper()}"
+        webpage = requests.get(url)
 
+        try:
+            self.feed(webpage.text)
+            return list(zip(self.inputs, self.outputs))
+        finally:
+            self.inputs  = []
+            self.outputs = []
+
+# For the main contest page to find all the problems
 class CodeForcesMainPageParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
@@ -81,3 +84,4 @@ class CodeForcesMainPageParser(HTMLParser):
         self.feed(r.text)
         self.contest = None
         return sorted(list(self.problems))
+

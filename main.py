@@ -1,4 +1,4 @@
-#! /bin/env python3
+#! /usr/bin/env python3
 
 import argparse
 
@@ -50,7 +50,7 @@ def run_problem(problem):
         print(cmd)
         r = subprocess.run(f"bash -c '{cmd}'",  shell=True)
         if r.returncode == 0:
-            log.success(f"{problem}.{n} success")
+            log.success(f"{problem}.{n} pass")
         else:
             log.error(f"{problem}.{n} failed")
 
