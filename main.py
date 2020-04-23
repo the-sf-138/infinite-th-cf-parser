@@ -3,8 +3,12 @@
 import argparse
 
 parser = argparse.ArgumentParser(prog="CodeForcesParses")
-parser.add_argument("--contest-number", required=False, type=int)
-parser.add_argument("--problem", required=False)
+parser.add_argument("--contest-number",               required=False, type=int)
+parser.add_argument("--problem",                      required=False)
+parser.add_argument("--py",      action="store_true", required=False)
+parser.add_argument("--haskell", action="store_true", required=False)
+parser.add_argument("--cpp",     action="store_true", required=False)
+parser.set_defaults(py=False, haskell=False, cpp=False)
 
 args = parser.parse_args()
 
@@ -39,9 +43,16 @@ def create_contest_files(contest):
                 fi.write(o)
 
 
+def get_hint():
+    if args.py:        return runner.Python
+    elif args.cpp:     return runner.Cpp
+    elif args.haskell: return runner.Haskell
+    else:              return None
+
+
 # TODO refactor this shit
 def run_problem(problem):
-    fname   = runner.get_filename(problem)
+    fname   = runner.get_filename(problem, hint=get_hint())
     ftype   = runner.get_filetype(fname)
     exe     = runner.get_executable(ftype, problem, fname)
     samples = runner.get_samples(problem)
