@@ -40,7 +40,7 @@ def get_filename(problem, hint=None):
     valid_types = VALID_FILE_TYPES if (hint is None) else set([ f.split(".")[-1] for f in FILE_TYPES[hint]])
     candidates  = [ f for f in files if f.lower().startswith(problem.lower() + ".")
                     and not f.endswith("~")
-                    and (f.lower().split(".")[-1] in valid_types)]
+                    and (f.split(".")[-1] in valid_types)]
     assert len(candidates) == 1, ", ".join(candidates)
     return candidates[0]
 

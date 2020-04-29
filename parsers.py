@@ -1,13 +1,15 @@
 import requests
 from html.parser import HTMLParser
 
+import log
+
 # For each problem to find all the test cases
 class CodeForcerProblemPageParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
         self.awaiting  = False
         self.div_stack = []
-        self.temp      = None
+        self.temp      = []
         self.inputs    = []
         self.outputs   = []
 
@@ -24,20 +26,19 @@ class CodeForcerProblemPageParser(HTMLParser):
             self.awaiting = True
 
     def handle_data(self, data):
-        assert self.temp is None
         if self.awaiting:
-            self.temp = data.strip("\n").strip(" ") + "\n"
+            self.temp.append(data.strip("\n").strip(" ") + "\n")
 
     def handle_endtag(self, tag):
         # the end tag of the stack tells us what data it is
         if self.div_stack and tag == "div":
             data_type = self.div_stack.pop()
             if data_type == "input":
-                self.inputs.append(self.temp)
-                self.temp = None
+                self.inputs.append("".join(self.temp))
+                self.temp = []
             elif data_type == "output":
-                self.outputs.append(self.temp)
-                self.temp = None
+                self.outputs.append("".join(self.temp))
+                self.temp = []
         if tag == "pre":
             self.awaiting = False
 
