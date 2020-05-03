@@ -50,6 +50,6 @@ def get_filetype(fname):
 
 def get_samples(problem):
     problem = problem.lower()
-    inputs = glob.glob(f"inputs/{problem}.input.*")
-    outputs = glob.glob(f"outputs/{problem}.output.*")
+    inputs  = [ i for i in glob.glob(f"inputs/{problem}.input.*") if not i.endswith("~") ]
+    outputs = [ o for o in glob.glob(f"outputs/{problem}.output.*") if not o.endswith("~") ]
     return zip(sorted(inputs), sorted(outputs))
