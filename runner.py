@@ -35,21 +35,31 @@ def get_executable(type, problem, fname):
     else:
         log.error("Invalid type {type} {problem} {fname}")
 
-def get_filename(problem, hint=None):
+def get_filename(problem, contest=None, hint=None):
     files       = os.listdir()
     valid_types = VALID_FILE_TYPES if (hint is None) else set([ f.split(".")[-1] for f in FILE_TYPES[hint]])
-    candidates  = [ f for f in files if f.lower().startswith(problem.lower() + ".")
+    if contest is None:
+        start = f"{problem.lower()}."
+    else:
+        start = f"{contest}.{problem.lower()}."
+    candidates  = [ f for f in files if f.lower().startswith(start)
                     and not f.endswith("~")
                     and (f.split(".")[-1] in valid_types)]
-    assert len(candidates) == 1, ", ".join(candidates)
+    assert len(candidates) == 1, f"[{', '.join(candidates)}]"
     return candidates[0]
 
 def get_filetype(fname):
     ext = "." + fname.split(".")[-1]
     return TO_FILE_TYPE[ext]
 
-def get_samples(problem):
+def get_samples(problem, contest=None):
     problem = problem.lower()
-    inputs  = [ i for i in glob.glob(f"inputs/{problem}.input.*") if not i.endswith("~") ]
-    outputs = [ o for o in glob.glob(f"outputs/{problem}.output.*") if not o.endswith("~") ]
+    if contest:
+        input_glob = f"inputs/{contest}.{problem}.input.*"
+        output_glob = f"outputs/{contest}.{problem}.output.*"
+    else:
+        input_glob = f"inputs/{problem}.input.*"
+        output_glob = f"outputs/{problem}.output.*"
+    inputs  = [ i for i in glob.glob(input_glob) if not i.endswith("~") ]
+    outputs = [ o for o in glob.glob(output_glob) if not o.endswith("~") ]
     return zip(sorted(inputs), sorted(outputs))
