@@ -21,7 +21,7 @@ VALID_FILE_TYPES = set([f.split(".")[-1] for t, fs in FILE_TYPES.items() for f i
 
 def get_executable(type, problem, fname):
     if type == Cpp:
-        cmd = f"g++ -std=c++14 {fname} -o {problem}"
+        cmd = f"g++ -std=c++17 {fname} -o {problem}"
         try:
             subprocess.run(cmd.split(), check=True)
             return f"./{problem}"
