@@ -44,7 +44,10 @@ class CodeForcerProblemPageParser(HTMLParser):
 
     def get_test_cases(self, contest, problem):
         url     = f"https://codeforces.com/contest/{contest}/problem/{problem.upper()}"
-        webpage = requests.get(url)
+        headers = {
+            'User-Agent': 'Lynx/2.8.9rel.1 libwww-FM/2.14 SSL-MM/1.4.1'
+        }
+        webpage = requests.get(url, headers=headers)
 
         try:
             self.feed(webpage.text)
@@ -81,7 +84,11 @@ class CodeForcesMainPageParser(HTMLParser):
     def get_problems(self, contest):
         self.contest = contest
         url = f"https://codeforces.com/contest/{self.contest}"
-        r = requests.get(url)
+        headers = {
+            'User-Agent': 'Lynx/2.8.9rel.1 libwww-FM/2.14 SSL-MM/1.4.1'
+        }
+        r = requests.get(url, headers=headers)
+        open("debug.html", "w").write(r.text)
         self.feed(r.text)
         self.contest = None
         return sorted(list(self.problems))

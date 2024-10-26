@@ -16,7 +16,7 @@ import os
 import subprocess
 import glob
 
-# Project local....
+# Project local
 import parsers
 import log
 import runner
